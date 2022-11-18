@@ -1,0 +1,20 @@
+<!-- top__cart_drawer.liquid  -->
+{{ 'top__cart_drawer.css' | asset_url | stylesheet_tag}}
+{% if settings.enable_cart_top == true %}
+{% assign total_saving = 0 %}
+{% for item in cart.items %}
+{% if item.variant.compare_at_price > item.variant.price %}
+{% capture saving %}{{ item.variant.compare_at_price | minus: item.variant.price | times:item.quantity | divided_by: 100 | abs }}{% endcapture %}
+{% assign total_saving = saving | plus: total_saving %}
+{% endif %} 
+{% endfor %}
+<div class="top__cart_drawer">
+  <div class="top__cart__inner">
+  <div class="icon__top_icon">
+  {% render 'icons', icon:'cart_icon'%}
+  </div>
+    <div class="item__counts"><span>{{cart.item_count}}</span> Item</div>
+  </div>
+<!--   <button type="button" name="checkout_top" class="checkout__top btn btn--full btn--large cart__checkout">Checkout</button> -->
+</div>
+{% endif %}

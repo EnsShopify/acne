@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="{{ locale }}" dir="{{ direction }}" class="{{ checkout_html_classes }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0, user-scalable=0">
+    <meta name="referrer" content="origin">
+
+    <title>{{ page_title }}</title>
+    {% if settings.favicon %}
+    <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png" />
+    {% endif %}
+    {{ content_for_header }}
+
+    {{ checkout_stylesheets }}
+    {{ 'checkout.css' | asset_url | stylesheet_tag }}
+    {{ checkout_scripts }}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!--     *********************Adobe-Analytics-implementation Start 20/10/22 ****************** -->
+    <script src="//assets.adobedtm.com/e6bd1902389a/0b667b5360d5/launch-ab7d6ca826cf.min.js" async></script>
+      {% render 'adobe-analytics' %}
+<!--     *********************Adobe-Analytics-implementation End****************** -->
+
+  </head>
+  <body {{ checkout.total_price }}>
+    <div class="loaderChekout"></div>
+    <div class="loaderChekout-overlay"></div>
+    {{ skip_to_content_link }}
+
+    <header class="banner" data-header role="banner">
+      <div class="wrap">
+        {{ content_for_logo }}
+      </div>
+    </header> 
+  
+    {% assign free_gift_added_fraud = 'false' %}
+    {% for item in checkout.line_items %}
+    {% assign item_quantity = item.quantity | times: 1 %}   
+    {% assign item_variant_id = item.variant_id %}
+      
+      {%if item_variant_id == 43324853485805 and item_quantity > 1%}
+        {% assign free_gift_added_fraud = 'true' %}
+        {% break %}
+      {%endif%}
+
+      {%if item_variant_id == 43324857975021 and item_quantity > 1 %}
+         {% assign free_gift_added_fraud = 'true' %}
+         {% break %}
+      {%endif%}
+    {% endfor %}
+
+    {{ order_summary_toggle }}
+    <div class="content" data-content>
+      <div class="wrap">
+        <div class="main">
+          <header class="main__header" role="banner">
+            {{ content_for_logo }}
+            {{ breadcrumb }}
+            {{ alternative_payment_methods }}
+          </header>
+          <main class="main__content" role="main">
+            {{ content_for_layout }}
+          </main>
+          <footer class="main__footer" role="contentinfo">
+            {{ content_for_footer }}
+          </footer>
+        </div>
+        <aside class="sidebar" role="complementary">
+          <div class="sidebar__header">
+            {{ content_for_logo }}
+          </div>
+          <div class="sidebar__content">
+            {{ content_for_order_summary }}
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    {{ tracking_code }}
+    
+    <script>
+       var free_gift_added_fraud = "{{ free_gift_added_fraud }}";
+      (function ($){
+        $(document).on("page:load page:change", function() {
+          if(free_gift_added_fraud == "true"){
+            $("#continue_button").remove();
+            $(".step__footer").html('<h2>This purchase cannot be processed</h2>');
+          }
+          var checkOutTotal = '{{ checkout.total_price }}';
+          if(checkOutTotal < 1){
+            location.href = '/';
+          }
+          {% for item in checkout.line_items %}
+          {% assign itemId = item.variant_id %}
+          {% if itemId == '43324857975021' or itemId == 43324857975021 %}
+             $.ajax({
+               type: 'POST',
+               url: '/cart/update.js',
+               data: {
+                 updates:{ "43324857975021"  : 1 }
+                },
+               dataType: 'json',
+               async:false,  
+             });
+          {% endif %}
+          {% if itemId == '43324853485805' or itemId == 43324853485805 %}
+             $.ajax({
+               type: 'POST',
+               url: '/cart/update.js',
+               data: {
+                   updates:{ "43324853485805" : 1 }
+                 },
+               dataType: 'json',
+               async:false,  
+             });
+          {% endif %}
+          {% endfor %}
+        });
+      })(Checkout.$)
+    </script>
+    <div class="loader" style="display: none;"></div>
+    {% render 'discount-on-prepaid' %}
+    
+    <script src="{{ 'checkout-script.js' | asset_url }}"  defer="defer"></script>
+    {% if content_for_layout contains 'data-step="contact_information"' %}
+
+    {% elsif content_for_layout contains 'data-step="shipping_method"' %}
+
+    {% elsif content_for_layout contains 'data-step="payment_method"' %}
+    <script>
+    // For gtag ATC >> 22/09/2022
+      $(document).on("click",'#continue_button',function(){
+      let gtag_atc_price = $('.total-recap__final-price').text().replace('₹','').trim();  
+      console.log("payment_method >>",gtag_atc_price);
+        gtag('event', 'add_payment_info', {
+            'send_to': 'G-C1KL70NW4X',
+            'value': gtag_atc_price,
+            'currency': 'INR'
+          });
+      });
+    </script>
+    {% elsif content_for_layout contains 'data-step="review"' %}
+
+    {% endif %}
+  </body>
+</html>
+
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "dnblggj25u");
+</script>
+
+<style>
+.loader {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background:url('https://cdn.shopify.com/s/files/1/0014/3514/0183/t/268/assets/giphy.gif') 50% 50% no-repeat #fff;
+  opacity: 1;
+} 
+  
+</style>
+
+<!--  ux design  -->
+<style>
+ a,.link{
+  text-decoration:underline!important;
+}
+  .js .sidebar .btn--disabled {
+  background: #AC9EFD !important;
+  }
+</style>
+<!--  ux design  -->

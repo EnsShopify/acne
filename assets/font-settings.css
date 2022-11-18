@@ -1,0 +1,68 @@
+@font-face {
+  font-family: Oswald;
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://fonts.shopifycdn.com/oswald/oswald_n4.a5ee385bde39969d807f7f1297bf51d73fbf3c1e.woff2?h1=YWNuZXNxdWFkLmlu&h2=YWNuZXNxdWFkLmNvbQ&hmac=3be4959eafc3e7b92879a277ac2b79f1145e10ae81e3f98ecbaefb00152619c2") format("woff2"),
+       url("https://fonts.shopifycdn.com/oswald/oswald_n4.8f3e284746fbc2d29e34993609c51fdc432b0b24.woff?h1=YWNuZXNxdWFkLmlu&h2=YWNuZXNxdWFkLmNvbQ&hmac=98289d10ce13ad32e971d609b674193ac5e6a238576f4e4146a8838907be0e9d") format("woff");
+}
+
+@font-face {
+  font-family: Helvetica;
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://fonts.shopifycdn.com/helvetica/helvetica_n4.fe093fe9ca22a15354813c912484945a36b79146.woff2?h1=YWNuZXNxdWFkLmlu&h2=YWNuZXNxdWFkLmNvbQ&hmac=69f3ebd0f099dd81e2221a26bfd80738fc92a364636a1f73a1238737d6a02215") format("woff2"),
+       url("https://fonts.shopifycdn.com/helvetica/helvetica_n4.8bddb85c18a0094c427a9bf65dee963ad88de4e8.woff?h1=YWNuZXNxdWFkLmlu&h2=YWNuZXNxdWFkLmNvbQ&hmac=6cba9fa398005b23c1ed9010bc38dfb5643431f86eb0e6a24564f6f3d4613f79") format("woff");
+}
+
+
+
+  @font-face {
+  font-family: Oswald;
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://fonts.shopifycdn.com/oswald/oswald_n5.22b74dce86cb1e4738ccceb326c9284bc24641e9.woff2?h1=YWNuZXNxdWFkLmlu&h2=YWNuZXNxdWFkLmNvbQ&hmac=fc43e0166767d91943dbb298990212ab0b3dc12689df7a73e35510e8d025ab74") format("woff2"),
+       url("https://fonts.shopifycdn.com/oswald/oswald_n5.c60897f79173105d5bae1e28e68e9326a4a64631.woff?h1=YWNuZXNxdWFkLmlu&h2=YWNuZXNxdWFkLmNvbQ&hmac=0ce0980ccbc2c9a27d2da2c81c3d4c0e8de44196326225562494944b615bb44f") format("woff");
+}
+
+
+
+
+  @font-face {
+  font-family: Helvetica;
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://fonts.shopifycdn.com/helvetica/helvetica_n7.39bee04bd277a9c4e94e2fd42d53f4e3c0afb8a5.woff2?h1=YWNuZXNxdWFkLmlu&h2=YWNuZXNxdWFkLmNvbQ&hmac=7b76c1b992d103d5e4df9002031e74f8c3d22ee4f25c2078333bae4995e389a8") format("woff2"),
+       url("https://fonts.shopifycdn.com/helvetica/helvetica_n7.b95359461a6788d5549e702cb2123bc40c227e49.woff?h1=YWNuZXNxdWFkLmlu&h2=YWNuZXNxdWFkLmNvbQ&hmac=9cecbd53015be1e56cca300861092617641b90e0cb4e0c81a2fca4df3a91d450") format("woff");
+}
+
+
+
+
+
+
+
+  @font-face {
+  font-family: Helvetica;
+  font-weight: 400;
+  font-style: oblique;
+  font-display: swap;
+  src: url("https://fonts.shopifycdn.com/helvetica/helvetica_o4.f9832a0fc1ee8fc5a359636e410d6941e1e4ca03.woff2?h1=YWNuZXNxdWFkLmlu&h2=YWNuZXNxdWFkLmNvbQ&hmac=a83ee444ae4d7ef0ef615facd09d1adda97d6e924352c0c05c90bfb80e7d4202") format("woff2"),
+       url("https://fonts.shopifycdn.com/helvetica/helvetica_o4.0063286aec443697ebae04eeb9c78b820f9f7805.woff?h1=YWNuZXNxdWFkLmlu&h2=YWNuZXNxdWFkLmNvbQ&hmac=7a51c44fbab69d8efb533e5d1af694817ad2c301e90139bf530afca6fe48f1b0") format("woff");
+}
+
+
+
+
+  @font-face {
+  font-family: Helvetica;
+  font-weight: 700;
+  font-style: oblique;
+  font-display: swap;
+  src: url("https://fonts.shopifycdn.com/helvetica/helvetica_o7.215fd4ca1a06214fa01e44328a1992c977700ea2.woff2?h1=YWNuZXNxdWFkLmlu&h2=YWNuZXNxdWFkLmNvbQ&hmac=6c48aa2541d28701885b9a86f549992a088b127eed255968f7e1cb95d6c67dfa") format("woff2"),
+       url("https://fonts.shopifycdn.com/helvetica/helvetica_o7.b0a2026ae2aa64d060f9ce0ee1b3c3c1aa21bf88.woff?h1=YWNuZXNxdWFkLmlu&h2=YWNuZXNxdWFkLmNvbQ&hmac=2c1936742bdf9223d78cea47c400d8ccf49836cf74b0551425161ecd6b63bb63") format("woff");
+}
+

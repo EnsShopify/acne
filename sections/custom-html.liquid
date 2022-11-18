@@ -1,0 +1,67 @@
+<!-- /sections/custom-html.liquid -->
+{%- assign html = section.settings.html -%}
+{%- assign show_padding = section.settings.show_padding -%}
+
+<section class="custom-html-section {% if show_padding %}wrapper custom-html-section--padding {% endif %}" data-section-id="{{ section.id }}" data-section-type="custom-html">
+  {% comment %}
+  HTML added through the Theme Editor renders on the next line. You can also add code before/after this comment.
+  {% endcomment %}
+  <div style="text-align:center;">
+    <video class="video_for-desktop" preload="none" loop="loop" autoplay="autoplay" playsinline="" muted="" width="100%">
+      <source src="{{ section.settings.video }}" >
+    </video>
+    
+    <video class="video_for-mobile" preload="none" loop="loop" autoplay="autoplay" playsinline="" muted="" width="100%">
+      <source src="{{ section.settings.mob_video }}" >
+    </video>
+    
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Custom HTML",
+  "settings": [
+    {
+      "type": "html",
+      "id": "html",
+      "label": "Custom HTML",
+      "default": "<p>Once you write some HTML, it will render right here.</p>"
+    },
+	{
+      "type": "text",
+      "id": "video",
+      "label": "Video Link"
+    },
+	{
+      "type": "text",
+      "id": "mob_video",
+      "label": "Mobile Video Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_padding",
+      "label": "Show padding",
+      "default": true
+    },
+    {
+  "type": "text",
+  "id": "heading1",
+  "label": "Container width",
+  "default": "Quick links"
+   },
+   {
+  "type": "text",
+  "id": "heading2",
+  "label": "vertical alignment",
+  "default": "Quick links"
+   }
+  ],
+  "presets": [
+    {
+      "category": "Text",
+      "name": "Custom HTML"
+    }
+  ]
+}
+{% endschema %}

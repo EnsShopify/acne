@@ -1,0 +1,359 @@
+<!--<p>templates/page.track-order.liquid</p>-->
+{{ 'track-order.css' | asset_url | stylesheet_tag }}
+<div class="content">
+</div>
+
+<script>
+  
+  $(document).ready(function(){
+    $('.track_order_btn').click(function(){ 
+      $('.js-expected_delivery .text-medium').text('Expected date: ');
+      var Months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+      $('.trackOrder').css('display','none');
+      $('.no-trackOrder').css('display','none');
+      $('.before_loader-gif').css('display','block');
+      var trackId = $('#fname').val();
+      var idLength = trackId.length;
+      var url = 'https://myindiabazar.com/ensenterprises/shiprocketpbbu/shiprocket_acnesquad.php?awbid='+trackId;
+      var orderUrl = 'https://myindiabazar.com/ensenterprises/shiprocketpbbu/order_shiprocket.php?store=acnesquad&ordername='+trackId;
+      $.ajax({
+        type : 'GET',
+        url : url,
+        dataType : 'json',
+        success : function(result){
+          //console.log('1');
+          console.log(result);
+          if(result.status_code == '404'){
+            $('.before_loader-gif').css('display','none');
+            $('.trackOrder').css('display','none');
+            $('.no-trackOrder').css('display','block');
+            $('#js-no-tracking_id').html(trackId);
+            $('.no-track-order-discription').text('Please Enter the correct Order Id or Awb Number');
+          }
+          var tracking_data = result.tracking_data;
+          $('#js-expected_delivery').html('Updating');
+          $('#js-tracking_status').text('Updating');
+          if(tracking_data.track_status == 1 ){
+            $('#js-tracking_id').html(trackId);
+            $('.trackOrder').css('display','block');
+            $('.no-trackOrder').css('display','none');
+            $('.before_loader-gif').css('display','none');
+            var current_status = tracking_data.shipment_track[0].current_status;
+            current_status = current_status.split('-')[0];
+            $('#js-tracking_status').text(current_status);
+            if(current_status == 'Delivered' || current_status == 'delivered'){
+              $('.js-expected_delivery .text-medium').text('Delivered date: ');
+            }
+            if(tracking_data.etd.split(' ')[0]){
+              var expecteddate = new Date(tracking_data.etd.split(' ')[0]);
+            }else{
+ 			  var expecteddate = new Date(tracking_data.shipment_track[0].edd.split(' ')[0]);
+            }
+            var d = expecteddate.getDate();
+            var m = Months[expecteddate.getMonth()];
+            var y = expecteddate.getFullYear();
+            $('#js-expected_delivery').html(d+' '+m+' '+y);
+			$('#js-courier_name').text('Ship Rocket');
+            
+            var scans = result.tracking_data.shipment_track_activities;
+            $('.timeStatus').text('');
+            $('.order-status_track').removeClass('completed');
+            var currentStatus = current_status.replace(/ +/g, "");
+            if(currentStatus == 'InTransit'){
+              $('[data-status="InTransit"]').addClass('completed');
+            }
+            if(currentStatus == 'Dispatched'){
+              $('[data-status="InTransit"]').addClass('completed');
+              $('[data-status="Dispatched"]').addClass('completed');
+            }
+            if(currentStatus == 'Delivered'){
+              $('[data-status="InTransit"]').addClass('completed');
+              $('[data-status="Dispatched"]').addClass('completed');
+              $('[data-status="Delivered"]').addClass('completed');
+            }
+            
+//             var scanLength = scans.length;
+//             var stausArr = [];
+//             var arrWithTime = [];
+//             for(var i = 0; i < scanLength; i++){
+//               var scansStaus = scans[i].activity;
+//               	  scansStaus = scansStaus.split('-')[0];
+//                   scansStaus = scansStaus.replace(/ +/g, "");
+//               var deliveryTime = scans[i].date;
+//               	  deliveryTime = deliveryTime.substring(0, deliveryTime.lastIndexOf(":"));
+//               var deliveryDate = deliveryTime.split(' ')[0];
+//               var item = {
+//                 scansStaus,
+//                 deliveryTime
+//               };
+
+//               if(!stausArr.includes(scansStaus)){
+//                 stausArr.push(scansStaus);
+//                 arrWithTime.push(item);
+//                 $('[data-status="'+scansStaus+'"] .timeStatus').text(deliveryTime);
+//               }
+//             }
+//             var statusArrLength = stausArr.length;
+//             for(var j = 0; j < statusArrLength; j++){
+//               var arrElement = stausArr[j];
+//               $('.order-status_track').each(function(){
+//                 var attrElement = $(this).attr('data-status');
+//                 if( attrElement == arrElement){
+//                   $(this).addClass('completed');
+//                 }
+//               });
+//             }
+          }
+          if(tracking_data.track_status == 0 ){
+            $.ajax({
+              type : 'GET',
+              url : orderUrl,
+              dataType : 'json',
+              async : false,
+              success : function(data){
+                //console.log('2');
+                var orders = data.orders;
+                console.log(orders);
+                if(orders.length == 1){
+                  $('.order-status_track').removeClass('completed');
+                  $('[data-status="confirmed"]').addClass('completed');
+                  $('.timeStatus').text('');
+                  $('.trackOrder').css('display','block');
+                  $('.no-trackOrder').css('display','none');
+                  $('.before_loader-gif').css('display','none');
+                  $('#js-no-tracking_id').html(trackId);
+                  $('#js-tracking_status').text('Confirmed');
+                  var created_at = orders[0].created_at.split('T')[0];
+                  var deliveryDate = new Date(created_at);
+                      deliveryDate.setDate(deliveryDate.getDate() + 7);
+                  $('[data-status="confirmed"]').find('.timeStatus').text(created_at);
+                  var dt = deliveryDate.getDate();
+                  var mt = Months[deliveryDate.getMonth()];
+                  var yt = deliveryDate.getFullYear();
+                  $('#js-expected_delivery').html(dt+' '+mt+' '+yt);
+                }else{
+                  $('.trackOrder').css('display','none');
+                  $('.no-trackOrder').css('display','block');
+                  $('#js-no-tracking_id').html(trackId);
+                  $('.no-track-order-discription').text('Please Enter the correct Order Id or Awb Number');
+                }
+              },
+              error : function(){
+                console.log('error Orders');
+                $('.trackOrder').css('display','none');
+                $('.no-trackOrder').css('display','block');
+                $('.before_loader-gif').css('display','none');
+                $('#js-no-tracking_id').html(trackId);
+                $('.no-track-order-discription').text('Tracking details not found');
+              }
+            });
+          }
+ 
+        },
+        error : function(){
+          console.log('jhghjghj');
+        }
+      });
+    });
+    
+    $('body').on('keyup paste', '#fname', function(){
+      $(this).css('border-color',"#e3e3e3");
+    })
+  });
+
+</script>
+
+
+<div class="Container">
+  <header class="PageHeader">
+    <div class="SectionHeader SectionHeader--center">
+      <p class="SectionHeader__Heading Heading u-h1">Track Your Order</p>
+    </div>
+  </header>
+
+  <div class="PageContent PageContent--track ">
+    <div class="Rte">
+      <div class="PageContent--narrow track-head-form">
+        <p class="track-topic">Use Order Id or AWB Number :</p>
+        <div class="track-form">
+          <div class="Form__Item_track">
+            <input type="text" class="Form__Input" id="fname" placeholder="Enter Tracking Id">
+          </div>
+          <div class="Form__Item_track-btn">
+            <button type="button" class=" Button Button--primary Button--full click-btn track_order_btn">Submit</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="before_loader-gif">
+        <img width="70" src="https://cdn.shopify.com/s/files/1/0562/2068/0362/files/loder.gif?v=1648015877" alt="loader" />
+      </div>
+      
+      <div class="trackOrder" style="display: none;">
+        <div class="MainTrackOrder  ">
+          <div class="track-head">
+            <span class="text-uppercase">Tracking Order No (Order Id or AWB No) - </span>
+            <span id="js-tracking_id" class="text-medium">Updating</span>
+          </div>
+          <div class="track-order-discription">
+            <div class="order-speed"><span class="text-medium">Shipped Via:</span> <span id="js-courier_name">Updating</span></div>
+            <div class="order-speed "><span class="text-medium">Status:</span> <span id="js-tracking_status">Updating</span></div>
+            <div class="order-speed js-expected_delivery" ><span class="text-medium">Expected Date:</span> <span id="js-expected_delivery">Updating</span></div>
+          </div>
+          <div class="track-body">
+            <div class="steps track-disc-part">
+<!------------ code from js --------------->
+              <div class="step completed track-mobile" data-status="confirmed">
+                <div class="step-icon-wrap ">
+                  <div class="step-icon">{{ section.settings.icon_1 }}</div>
+                </div>	
+                <p class="step-title">{{ section.settings.heading  }}<br><span class="timeStatus"></span></p>
+              </div>
+
+              <div class="step order-status_track" style="display:none">
+                <div class="step-icon-wrap">
+                  <div class="step-icon">{{ section.settings.icon_2 }}</div>
+                </div>
+                <p class="step-title">{{ section.settings.heading_2  }}<br><span class="timeStatus"></span></p>
+              </div>
+              
+              <div class="step order-status_track track-mobile" data-status="InTransit">
+                <div class="step-icon-wrap">
+                  <div class="step-icon">{{ section.settings.icon_3 }}</div>
+                </div>
+                <p class="step-title">{{ section.settings.heading_3  }}<br><span class="timeStatus"></span></p>
+              </div>
+              
+              <div class="step order-status_track track-mobile" data-status="Dispatched">
+                <div class="step-icon-wrap">
+                  <div class="step-icon">{{ section.settings.icon_4 }}</div>
+                </div>
+                <p class="step-title">{{ section.settings.heading_4  }}<br><span class="timeStatus"></span></p>
+              </div>
+              
+              <div class="step order-status_track track-mobile returned_status" style="display:none;"  data-status="RTO">
+                <div class="step-icon-wrap">
+                  <div class="step-icon"><i class="fa fa-undo" aria-hidden="true"></i></div>
+              </div>
+              <p class="step-title">Returned Accepted<br><span class="timeStatus"></span></p>
+            </div>
+            
+            <div class="step order-status_track track-mobile delivered_status" data-status="Delivered">
+              <div class="step-icon-wrap">
+                <div class="step-icon">{{ section.settings.icon_6 }}</div>
+              </div>
+              <p class="step-title">
+                {{ section.settings.heading_6  }}<br>
+                <span class="timeStatus"></span>
+              </p>
+            </div>
+            <!---------------- end ------------------->
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="no-trackOrder" style="display:none;">
+      <div class="MainTrackOrder  ">
+        <div class="track-head">
+          <span class="text-uppercase">Tracking Order No - </span>
+          <span id="js-no-tracking_id" class="text-medium">Updating</span>
+        </div>
+        <div class="no-track-order-discription"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% schema %}
+{
+"name": "Track Order Page",
+"settings": [
+{
+"type" : "header",
+"content" : "Track Order Page"
+},
+{
+"type" : "html",
+"id" : "icon_1",
+"label" : "Icons "
+},
+{
+"type" : "text",
+"id" : "heading",
+"label" : "Heading "
+},
+{
+"type" : "html",
+"id" : "icon_2",
+"label" : "Icons "
+},
+{
+"type" : "text",
+"id" : "heading_2",
+"label" : "Heading "
+},
+{
+"type" : "html",
+"id" : "icon_3",
+"label" : "Icons "
+},
+{
+"type" : "text",
+"id" : "heading_3",
+"label" : "Heading "
+},
+{
+"type" : "html",
+"id" : "icon_4",
+"label" : "Icons "
+},
+{
+"type" : "text",
+"id" : "heading_4",
+"label" : "Heading "
+},
+{
+"type" : "html",
+"id" : "icon_5",
+"label" : "Icons "
+},
+{
+"type" : "text",
+"id" : "heading_5",
+"label" : "Heading "
+},
+{
+"type" : "html",
+"id" : "icon_6",
+"label" : "Icons "
+},
+{
+"type" : "text",
+"id" : "heading_6",
+"label" : "Heading "
+}
+]
+}
+{% endschema %}
+<!--  <style>
+  .trackOrder{
+  	display:none;
+  }
+</style>  -->
+<script>
+	$(".click-btn").click(function() {
+      var fname = $("#fname").val();
+      if(fname)
+      {
+  		$(".trackOrder").show();
+      }
+      else
+      {
+        $("#fname").css("border","1px solid red");
+      }
+  });
+</script>
+
